@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+int BrojParnih(int* pp, int n) { //Prebroji parne brojeve u random generiranom polju
+    int brojac = 0;
+    for (int i = 0; i < n; i++)
+        if (*(pp + i) % 2 == 0 && *(pp + i)>=0) brojac++;
+    return brojac;
+}
+
+void ParniINegativni(int* pp,int n,int*ppa,int*pne,int*br1,int*br2) { //Iz početno generiranog polja razvrstaj parne i negativne elemente u zasebna polja
+    for (int i = 0; i < n; i++) { //Provjerava jesu li elementi parni ili negativni te ih ubacuje u predviđena polja u main()-u
+        if (*(pp + i) % 2 == 0 && *(pp + i)>=0) {
+            *(ppa+*br1) = *(pp + i);
+            *(br1) += 1;
+        }
+        if (*(pp + i) < 0) {
+            *(pne+*br2) = *(pp + i);
+            *(br2)+= 1;
+        }
+    }
+}
+
+void OduzimanjePolja(int* pp, int* ppa, int* pne,int n,int br1,int br2) { //Oduzmi od početnog polja polje "parni" i polje "negativni"
+    int a = max(br1, br2); //Odabir veće vrijednosti zbog ispisa na kraju i provjere elemenata
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < a; j++) {
+            if (*(pp + i) == *(ppa + j) || *(pp + i) == *(pne + j)) { //Ako se element iz početnog polja nalazi u bilo kojem od polja 
+                *(pp + i) = 0;                                        // "parni" ili "negativni" njegova se vrijednost postavlja na 0
+            }
+        }
+    }
+    for (int x = 0; x < n; x++) { //Ispis polja nakon oduzimanja
+        if (*(pp + x) != 0)
+            cout << *(pp + x)<<" ";
+    }
+}
+
+int main()
+{
+    int a = -50, b = 50;
+    int polje[10];
+    for (int i = 0; i < 10; i++) { //Generiranje polja od 10 elemenata
+        polje[i] = rand() % (b - a) + a;
+    }
+    for (int i = 0; i < 10; i++) { //Ispis generiranog polja
+        cout<<polje[i]<<" ";
+    }
+    cout << '\n';
+    cout << BrojParnih(&polje[0], 10); //Ispis broja parnih elemenata većih od 0
+    cout << '\n'; 
+    int br1 = 0, br2 = 0, parni[100], negativni[100]; //br1 za broj parnih elemenata, br2 za broj negativnih elemenata, polja za parne i negativne elemente polja
+    ParniINegativni(&polje[0], 10,&parni[0],&negativni[0],&br1,&br2); //Pozivanje funkcije ParniINegativni
+    for (int i = 0; i < br1; i++) { //Ispis polja s parnim elementima
+        cout << parni[i] << " ";
+    }
+    cout << '\n';
+    for (int i = 0; i < br2; i++) { //Ispis polja s negatvnim elementima
+        cout << negativni[i] << " ";
+    }
+    cout << '\n';
+    OduzimanjePolja(&polje[0], &parni[0], &negativni[0], 10, br1, br2); //Pozivanje funcije OduzimanjePolja
+
+
+}
